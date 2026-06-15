@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Update your company — SWAMPT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <h1 class="logo"><a href="index.html">SWAMPT</a></h1>
+  </header>
+
+  <p class="subtitle">Request a change to your listing. Pick what you'd like to update, fill in the new details, and we'll review and apply the change.</p>
+
+  <main class="form-page">
+    <form id="request-form" class="company-form" novalidate>
+
+      <label for="company-name">Your company name (as it appears on the site)</label>
+      <input type="text" id="company-name" name="companyName" placeholder="e.g. Mismatch" required>
+
+      <label for="contact">Your email or contact (optional, in case we have questions)</label>
+      <input type="text" id="contact" name="contact" placeholder="e.g. lola@mismatchstudios.com">
+
+      <label class="group-label">What would you like to change?</label>
+
+      <div class="check-item">
+        <label class="checkbox-label">
+          <input type="checkbox" name="check" value="remove" id="check-remove">
+          Remove my listing entirely
+        </label>
+      </div>
+
+      <div class="check-item">
+        <label class="checkbox-label">
+          <input type="checkbox" name="check" value="name" id="check-name">
+          Company name
+        </label>
+        <div class="check-detail" id="detail-name" hidden>
+          <input type="text" name="newName" placeholder="New company name">
+        </div>
+      </div>
+
+      <div class="check-item">
+        <label class="checkbox-label">
+          <input type="checkbox" name="check" value="founder" id="check-founder">
+          Founder name(s)
+        </label>
+        <div class="check-detail" id="detail-founder" hidden>
+          <input type="text" name="newFounder" placeholder="New founder name(s)">
+        </div>
+      </div>
+
+      <div class="check-item">
+        <label class="checkbox-label">
+          <input type="checkbox" name="check" value="description" id="check-description">
+          Description
+        </label>
+        <div class="check-detail" id="detail-description" hidden>
+          <textarea name="newDescription" rows="3" placeholder="New description"></textarea>
+        </div>
+      </div>
+
+      <div class="check-item">
+        <label class="checkbox-label">
+          <input type="checkbox" name="check" value="tags" id="check-tags">
+          Hashtags
+        </label>
+        <div class="check-detail" id="detail-tags" hidden>
+          <p class="field-hint">Enter up to 3. These will replace all existing hashtags.</p>
+          <div class="tag-row">
+            <input type="text" name="newTag1" placeholder="#sustainability" maxlength="24">
+            <input type="text" name="newTag2" placeholder="#fashiontech" maxlength="24">
+            <input type="text" name="newTag3" placeholder="#london" maxlength="24">
+          </div>
+        </div>
+      </div>
+
+      <div class="check-item">
+        <label class="checkbox-label">
+          <input type="checkbox" name="check" value="links" id="check-links">
+          Links
+        </label>
+        <div class="check-detail" id="detail-links" hidden>
+          <p class="field-hint">These will replace all existing links.</p>
+          <div id="link-rows">
+            <div class="link-row">
+              <input type="text" name="newLinkLabel" placeholder="Label, e.g. Instagram">
+              <input type="url" name="newLinkUrl" placeholder="https://...">
+            </div>
+            <div class="link-row">
+              <input type="text" name="newLinkLabel" placeholder="Label, e.g. Website">
+              <input type="url" name="newLinkUrl" placeholder="https://...">
+            </div>
+          </div>
+          <button type="button" id="add-link" class="text-btn">+ Add another link</button>
+        </div>
+      </div>
+
+      <div class="check-item">
+        <label class="checkbox-label">
+          <input type="checkbox" name="check" value="other" id="check-other">
+          Something else
+        </label>
+        <div class="check-detail" id="detail-other" hidden>
+          <textarea name="newOther" rows="3" placeholder="Describe the change you'd like"></textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <a class="cancel-btn" href="index.html">Cancel</a>
+        <button type="submit" class="submit-btn">Submit request</button>
+      </div>
+    </form>
+
+    <div id="result" class="result-box" hidden>
+      <h2 id="result-title"></h2>
+      <p id="result-message"></p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <a class="update-company-btn" href="add-company.html"> Add your company</a>
+    <a href="https://www.linkedin.com/in/anica-tahsin/" target="_blank"> Reach out on LinkedIn </a>
+    <p> © 2026 Swampt </p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="update-company.js"></script>
+</body>
+</html>
