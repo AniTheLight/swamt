@@ -3,28 +3,52 @@ const TOTAL_SLOTS = 15; // 5 x 3 grid
 const grid = document.getElementById("grid");
 const filterSelect = document.getElementById("tag-filter");
 
-// Build the filter dropdown from every tag used across companies
-const allTags = new Set();
-COMPANIES.forEach(c => c.tags.forEach(t => allTags.add(t)));
+init();
 
-[...allTags].sort().forEach(tag => {
-  const opt = document.createElement("option");
-  opt.value = tag;
-  opt.textContent = "#" + tag;
-  filterSelect.appendChild(opt);
-});
+async function init() {
+  const companies = await loadCompanies();
 
-// Render cards
-COMPANIES.forEach(company => {
-  grid.appendChild(buildCard(company));
-});
+  // Build the filter dropdown from every tag used across companies
+  const allTags = new Set();
+  companies.forEach(c => c.tags.forEach(t => allTags.add(t)));
 
-// Fill remaining slots with placeholders
-for (let i = COMPANIES.length; i < TOTAL_SLOTS; i++) {
-  const slot = document.createElement("div");
-  slot.className = "card-slot";
-  slot.innerHTML = `<div class="card-placeholder">More founders coming soon</div>`;
-  grid.appendChild(slot);
+  [...allTags].sort().forEach(tag => {
+    const opt = document.createElement("option");
+    opt.value = tag;
+    opt.textContent = "#" + tag;
+    filterSelect.appendChild(opt);
+  });
+
+  // Render cards
+  companies.forEach(company => {
+    grid.appendChild(buildCard(company));
+  });
+
+  // Fill remaining slots with placeholders
+  for (let i = companies.length; i < TOTAL_SLOTS; i++) {
+    const slot = document.createElement("div");
+    slot.className = "card-slot";
+    slot.innerHTML = `<div class="card-placeholder">More founders coming soon</div>`;
+    grid.appendChild(slot);
+  }
+}
+
+async function loadCompanies() {
+  try {
+    const { data, error } = await supabaseClient
+      .from("companies")
+      .select("name, founder, description, tags, links")
+      .eq("status", "approved")
+      .order("created_at", { ascending: true });
+
+    if (error) throw error;
+    if (data && data.length) return data;
+  } catch (err) {
+    console.warn("Could not load companies from Supabase, using local data instead.", err);
+  }
+
+  // Fallback to the local seed data (data.js) if Supabase is unreachable or empty
+  return COMPANIES;
 }
 
 function buildCard(company) {
