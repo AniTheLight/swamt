@@ -46,7 +46,7 @@ body {
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
-  font-family: 'Black Han Sans', serif;
+  font-family: 'Black Han Sans', sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 26px;
