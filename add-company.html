@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add your company — SWAMPT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <h1 class="logo"><a href="index.html">SWAMPT</a></h1>
+  </header>
+
+  <p class="subtitle">Tell the directory about your company so others in the Fashion-Tech Lab can find and connect with you.</p>
+
+  <main class="form-page">
+    <form id="company-form" class="company-form" novalidate>
+
+      <label for="company-name">Company name</label>
+      <input type="text" id="company-name" name="companyName" placeholder="e.g. Mismatch" required>
+
+      <label for="founder-name">Founder name(s)</label>
+      <input type="text" id="founder-name" name="founderName" placeholder="e.g. Lola" required>
+
+      <label for="description">Description</label>
+      <textarea id="description" name="description" rows="3" placeholder="A couple of sentences about what your company does" required></textarea>
+      <p class="field-hint">Shown on the card front, so keep it short.</p>
+
+      <label class="group-label">Hashtags (up to 3)</label>
+      <div class="tag-row">
+        <input type="text" name="tag1" placeholder="#sustainability" maxlength="24">
+        <input type="text" name="tag2" placeholder="#fashiontech" maxlength="24">
+        <input type="text" name="tag3" placeholder="#london" maxlength="24">
+      </div>
+
+      <label class="group-label">Links</label>
+      <div id="link-rows">
+        <div class="link-row">
+          <input type="text" name="linkLabel" placeholder="Label, e.g. Instagram">
+          <input type="url" name="linkUrl" placeholder="https://...">
+        </div>
+        <div class="link-row">
+          <input type="text" name="linkLabel" placeholder="Label, e.g. Website">
+          <input type="url" name="linkUrl" placeholder="https://...">
+        </div>
+      </div>
+      <button type="button" id="add-link" class="text-btn">+ Add another link</button>
+
+      <div class="form-actions">
+        <a class="cancel-btn" href="index.html">Cancel</a>
+        <button type="submit" class="submit-btn">Add to directory</button>
+      </div>
+    </form>
+
+    <div id="result" class="result-box" hidden>
+      <h2>You're almost done</h2>
+      <p>This site doesn't have a database yet, so new entries can't appear automatically. Copy the snippet below and send it over (or paste it into <code>data.js</code>) to get added to the directory.</p>
+      <pre id="snippet"></pre>
+      <button type="button" id="copy-snippet" class="text-btn">Copy snippet</button>
+    </div>
+  </main>
+
+  <script src="add-company.js"></script>
+</body>
+</html>
