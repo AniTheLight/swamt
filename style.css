@@ -48,8 +48,8 @@ body {
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
-  font-family: 'Playfair Display', sans-serif;
-  font-style: normal;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
   font-weight: 500;
   font-size: 26px;
   letter-spacing: 3px;
@@ -122,7 +122,26 @@ body {
 
 @media (max-width: 640px) {
   .grid { grid-template-columns: repeat(2, 1fr); }
-  .logo { font-size: 20px; letter-spacing: 2px; }
+
+  .topbar {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    min-height: 0;
+  }
+
+  .logo {
+    position: static;
+    transform: none;
+    font-size: 20px;
+    letter-spacing: 2px;
+  }
+
+  .header-actions {
+    margin-left: 0;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
 }
 
 /* Card */
