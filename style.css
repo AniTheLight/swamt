@@ -51,11 +51,39 @@ body {
   font-weight: 500;
   font-size: 26px;
   letter-spacing: 3px;
-  color: var(--card);
 }
 
-.filter-wrap {
+.logo a {
+  color: var(--card);
+  text-decoration: none;
+}
+
+.logo a:hover {
+  color: var(--back-link);
+}
+
+.header-actions {
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.add-company-btn {
+  background: var(--back-link);
+  color: var(--card-text);
+  border: none;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.add-company-btn:hover {
+  background: var(--card);
 }
 
 #tag-filter {
@@ -234,4 +262,178 @@ body {
 .card-inner:focus-visible {
   outline: 2px solid var(--card);
   outline-offset: 3px;
+}
+
+/* Add company form page */
+.form-page {
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.company-form {
+  background: var(--back-bg);
+  border-radius: 14px;
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+}
+
+.company-form label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--back-link);
+  margin-bottom: 4px;
+}
+
+.company-form .group-label {
+  margin-top: 4px;
+}
+
+.company-form input,
+.company-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--card);
+  color: var(--card-text);
+  border: none;
+  border-radius: 6px;
+  padding: 9px 11px;
+  font-size: 13px;
+  font-family: 'Nunito', sans-serif;
+  margin-bottom: 12px;
+}
+
+.company-form textarea {
+  resize: vertical;
+}
+
+.field-hint {
+  font-size: 10px;
+  color: var(--back-link);
+  margin: -8px 0 12px;
+}
+
+.tag-row,
+.link-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.tag-row input {
+  margin-bottom: 0;
+}
+
+.link-row input:first-child {
+  flex: 1;
+}
+
+.link-row input:last-child {
+  flex: 1.4;
+}
+
+.link-row input {
+  margin-bottom: 0;
+}
+
+.text-btn {
+  background: none;
+  border: none;
+  color: var(--back-link);
+  font-size: 12px;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+  margin: 4px 0 16px;
+}
+
+.text-btn:hover {
+  color: var(--card);
+}
+
+.text-btn:disabled {
+  color: rgba(244, 192, 209, 0.4);
+  text-decoration: none;
+  cursor: default;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.cancel-btn {
+  background: none;
+  border: 1px solid var(--back-link);
+  border-radius: 6px;
+  padding: 9px 18px;
+  font-size: 13px;
+  color: var(--back-link);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.cancel-btn:hover {
+  border-color: var(--card);
+  color: var(--card);
+}
+
+.submit-btn {
+  background: var(--back-link);
+  border: none;
+  border-radius: 6px;
+  padding: 9px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--card-text);
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+}
+
+.submit-btn:hover {
+  background: var(--card);
+}
+
+/* Result snippet */
+.result-box {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 20px 24px;
+  margin-top: 20px;
+  color: var(--card-text);
+}
+
+.result-box h2 {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 17px;
+  margin: 0 0 8px;
+}
+
+.result-box p {
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 0 0 12px;
+}
+
+.result-box code {
+  background: rgba(90, 0, 20, 0.08);
+  padding: 1px 4px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.result-box pre {
+  background: var(--bg);
+  color: var(--card);
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 11px;
+  overflow-x: auto;
+  white-space: pre;
+  margin: 0 0 10px;
 }
