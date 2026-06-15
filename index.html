@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SWAMPT — Fashion-Tech Lab Directory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <h1 class="logo">SWAMPT</h1>
+    <div class="filter-wrap">
+      <label for="tag-filter" class="visually-hidden">Filter by hashtag</label>
+      <select id="tag-filter">
+        <option value="all">Filter</option>
+      </select>
+    </div>
+  </header>
+
+  <p class="subtitle">Founders &amp; companies from the Fashion-Tech Lab group chat. Click a card to flip it and see links.</p>
+
+  <main id="grid" class="grid" aria-live="polite"></main>
+
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
