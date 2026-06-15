@@ -1,439 +1,103 @@
-:root {
-  --bg: #8a0020;
-  --card: #fbe4e9;
-  --card-text: #5a0014;
-  --card-sub: #993556;
-  --card-body: #72243e;
-  --back-bg: #5a0014;
-  --back-text: #fbe4e9;
-  --back-link: #f4c0d1;
-  --placeholder: rgba(251, 228, 233, 0.18);
-  --placeholder-text: rgba(251, 228, 233, 0.7);
+const TOTAL_SLOTS = 15; // 5 x 3 grid
+
+const grid = document.getElementById("grid");
+const filterSelect = document.getElementById("tag-filter");
+
+// Build the filter dropdown from every tag used across companies
+const allTags = new Set();
+COMPANIES.forEach(c => c.tags.forEach(t => allTags.add(t)));
+
+[...allTags].sort().forEach(tag => {
+  const opt = document.createElement("option");
+  opt.value = tag;
+  opt.textContent = "#" + tag;
+  filterSelect.appendChild(opt);
+});
+
+// Render cards
+COMPANIES.forEach(company => {
+  grid.appendChild(buildCard(company));
+});
+
+// Fill remaining slots with placeholders
+for (let i = COMPANIES.length; i < TOTAL_SLOTS; i++) {
+  const slot = document.createElement("div");
+  slot.className = "card-slot";
+  slot.innerHTML = `<div class="card-placeholder">More founders coming soon</div>`;
+  grid.appendChild(slot);
 }
 
-* {
-  box-sizing: border-box;
+function buildCard(company) {
+  const slot = document.createElement("div");
+  slot.className = "card-slot";
+  slot.dataset.tags = company.tags.join(",");
+
+  const inner = document.createElement("div");
+  inner.className = "card-inner";
+  inner.setAttribute("tabindex", "0");
+  inner.setAttribute("role", "button");
+  inner.setAttribute("aria-label", `${company.name}, ${company.founder}. Press enter to see links.`);
+
+  const front = document.createElement("div");
+  front.className = "card-face card-front";
+  front.innerHTML = `
+    <p class="card-name">${escapeHtml(company.name)}</p>
+    <p class="card-founder">${escapeHtml(company.founder)}</p>
+    <p class="card-desc">${escapeHtml(company.description)}</p>
+    <p class="card-tags">${company.tags.map(t => "#" + t).join(" ")}</p>
+  `;
+
+  const back = document.createElement("div");
+  back.className = "card-face card-back";
+
+  let linksHtml;
+  if (company.links.length) {
+    linksHtml = company.links
+      .map(l => `<a href="${l.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(l.label)}</a>`)
+      .join("");
+  } else {
+    linksHtml = `<p class="no-link">No link shared yet</p>`;
+  }
+
+  back.innerHTML = `
+    <p class="card-name">${escapeHtml(company.name)}</p>
+    ${linksHtml}
+    <p class="hint">Click to flip back</p>
+  `;
+
+  inner.appendChild(front);
+  inner.appendChild(back);
+  slot.appendChild(inner);
+
+  // Flip on click (but not when clicking a link)
+  inner.addEventListener("click", (e) => {
+    if (e.target.tagName === "A") return;
+    slot.classList.toggle("flipped");
+  });
+
+  // Keyboard support
+  inner.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      slot.classList.toggle("flipped");
+    }
+  });
+
+  return slot;
 }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: var(--bg);
-  font-family: 'Nunito', sans-serif;
-  color: var(--card-text);
-  padding: 28px 32px 48px;
-}
+// Filter by hashtag
+filterSelect.addEventListener("change", () => {
+  const value = filterSelect.value;
+  grid.querySelectorAll(".card-slot[data-tags]").forEach(slot => {
+    const tags = slot.dataset.tags.split(",");
+    const show = value === "all" || tags.includes(value);
+    slot.style.display = show ? "" : "none";
+  });
+});
 
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-}
-
-/* Header */
-.topbar {
-  position: relative;
-  display: flex;
-  align-items: center;
-  min-height: 40px;
-  margin-bottom: 6px;
-}
-
-.logo {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  margin: 0;
-  font-family: 'Playfair Display', serif;
-  font-style: italic;
-  font-weight: 500;
-  font-size: 26px;
-  letter-spacing: 3px;
-}
-
-.logo a {
-  color: var(--card);
-  text-decoration: none;
-}
-
-.logo a:hover {
-  color: var(--back-link);
-}
-
-.header-actions {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.add-company-btn {
-  background: var(--back-link);
-  color: var(--card-text);
-  border: none;
-  border-radius: 6px;
-  padding: 8px 14px;
-  font-family: 'Nunito', sans-serif;
-  font-weight: 600;
-  font-size: 13px;
-  text-decoration: none;
-  display: inline-block;
-}
-
-.add-company-btn:hover {
-  background: var(--card);
-}
-
-#tag-filter {
-  background: var(--card);
-  color: var(--card-text);
-  border: none;
-  border-radius: 6px;
-  padding: 8px 14px;
-  font-family: 'Nunito', sans-serif;
-  font-weight: 600;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.subtitle {
-  text-align: center;
-  color: var(--back-link);
-  font-size: 13px;
-  margin: 0 0 24px;
-}
-
-/* Grid */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 16px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-@media (max-width: 1000px) {
-  .grid { grid-template-columns: repeat(3, 1fr); }
-}
-
-@media (max-width: 640px) {
-  .grid { grid-template-columns: repeat(2, 1fr); }
-  .logo { font-size: 20px; letter-spacing: 2px; }
-}
-
-/* Card */
-.card-slot {
-  height: 170px;
-  perspective: 900px;
-}
-
-.card-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-  transition: transform 0.5s;
-  transform-style: preserve-3d;
-}
-
-.card-slot.flipped .card-inner {
-  transform: rotateY(180deg);
-}
-
-.card-face {
-  position: absolute;
-  inset: 0;
-  border-radius: 14px;
-  padding: 12px 14px;
-  box-sizing: border-box;
-  backface-visibility: hidden;
-  overflow: hidden;
-}
-
-.card-front {
-  background: var(--card);
-  display: flex;
-  flex-direction: column;
-}
-
-.card-name {
-  font-family: 'Playfair Display', serif;
-  font-weight: 500;
-  font-size: 15px;
-  color: var(--card-text);
-  margin: 0 0 2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.card-founder {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--card-sub);
-  margin: 0 0 6px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.card-desc {
-  font-size: 11px;
-  line-height: 1.4;
-  color: var(--card-body);
-  margin: 0;
-  flex: 1;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-}
-
-.card-tags {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--card-sub);
-  margin-top: 6px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Back face */
-.card-back {
-  background: var(--back-bg);
-  color: var(--back-text);
-  transform: rotateY(180deg);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 8px;
-}
-
-.card-back .card-name {
-  color: var(--back-text);
-  font-size: 13px;
-  margin-bottom: 2px;
-}
-
-.card-back a {
-  font-size: 11px;
-  color: var(--back-link);
-  text-decoration: underline;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  display: block;
-}
-
-.card-back a:hover {
-  color: var(--card);
-}
-
-.card-back .no-link {
-  font-size: 11px;
-  color: var(--back-link);
-  font-style: italic;
-}
-
-.card-back .hint {
-  font-size: 9px;
-  color: rgba(251, 228, 233, 0.55);
-  margin-top: 6px;
-}
-
-/* Placeholder card */
-.card-placeholder {
-  height: 100%;
-  border-radius: 14px;
-  background: var(--placeholder);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  font-size: 11px;
-  color: var(--placeholder-text);
-  padding: 10px;
-}
-
-/* Focus visibility */
-.card-inner:focus-visible {
-  outline: 2px solid var(--card);
-  outline-offset: 3px;
-}
-
-/* Add company form page */
-.form-page {
-  max-width: 480px;
-  margin: 0 auto;
-}
-
-.company-form {
-  background: var(--back-bg);
-  border-radius: 14px;
-  padding: 24px 28px;
-  display: flex;
-  flex-direction: column;
-}
-
-.company-form label {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--back-link);
-  margin-bottom: 4px;
-}
-
-.company-form .group-label {
-  margin-top: 4px;
-}
-
-.company-form input,
-.company-form textarea {
-  width: 100%;
-  box-sizing: border-box;
-  background: var(--card);
-  color: var(--card-text);
-  border: none;
-  border-radius: 6px;
-  padding: 9px 11px;
-  font-size: 13px;
-  font-family: 'Nunito', sans-serif;
-  margin-bottom: 12px;
-}
-
-.company-form textarea {
-  resize: vertical;
-}
-
-.field-hint {
-  font-size: 10px;
-  color: var(--back-link);
-  margin: -8px 0 12px;
-}
-
-.tag-row,
-.link-row {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.tag-row input {
-  margin-bottom: 0;
-}
-
-.link-row input:first-child {
-  flex: 1;
-}
-
-.link-row input:last-child {
-  flex: 1.4;
-}
-
-.link-row input {
-  margin-bottom: 0;
-}
-
-.text-btn {
-  background: none;
-  border: none;
-  color: var(--back-link);
-  font-size: 12px;
-  text-decoration: underline;
-  cursor: pointer;
-  padding: 0;
-  text-align: left;
-  margin: 4px 0 16px;
-}
-
-.text-btn:hover {
-  color: var(--card);
-}
-
-.text-btn:disabled {
-  color: rgba(244, 192, 209, 0.4);
-  text-decoration: none;
-  cursor: default;
-}
-
-.form-actions {
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-  margin-top: 4px;
-}
-
-.cancel-btn {
-  background: none;
-  border: 1px solid var(--back-link);
-  border-radius: 6px;
-  padding: 9px 18px;
-  font-size: 13px;
-  color: var(--back-link);
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.cancel-btn:hover {
-  border-color: var(--card);
-  color: var(--card);
-}
-
-.submit-btn {
-  background: var(--back-link);
-  border: none;
-  border-radius: 6px;
-  padding: 9px 18px;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--card-text);
-  cursor: pointer;
-  font-family: 'Nunito', sans-serif;
-}
-
-.submit-btn:hover {
-  background: var(--card);
-}
-
-/* Result snippet */
-.result-box {
-  background: var(--card);
-  border-radius: 14px;
-  padding: 20px 24px;
-  margin-top: 20px;
-  color: var(--card-text);
-}
-
-.result-box h2 {
-  font-family: 'Playfair Display', serif;
-  font-style: italic;
-  font-weight: 500;
-  font-size: 17px;
-  margin: 0 0 8px;
-}
-
-.result-box p {
-  font-size: 12px;
-  line-height: 1.5;
-  margin: 0 0 12px;
-}
-
-.result-box code {
-  background: rgba(90, 0, 20, 0.08);
-  padding: 1px 4px;
-  border-radius: 4px;
-  font-size: 11px;
-}
-
-.result-box pre {
-  background: var(--bg);
-  color: var(--card);
-  border-radius: 8px;
-  padding: 14px;
-  font-size: 11px;
-  overflow-x: auto;
-  white-space: pre;
-  margin: 0 0 10px;
+function escapeHtml(str) {
+  const div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
 }
