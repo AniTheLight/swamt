@@ -454,4 +454,9 @@ body {
   text-decoration: none;
   font-weight: 600;
 }
+
+.update-company-btn:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
   
