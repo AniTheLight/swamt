@@ -48,8 +48,8 @@ body {
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
-  font-family: 'Playfair Display', serif;
-  font-style: italic;
+  font-family: 'Playfair Display', san-serif;
+  font-style: normal;
   font-weight: 500;
   font-size: 26px;
   letter-spacing: 3px;
