@@ -57,13 +57,13 @@
     </form>
 
     <div id="result" class="result-box" hidden>
-      <h2>You're almost done</h2>
-      <p>This site doesn't have a database yet, so new entries can't appear automatically. Copy the snippet below and send it over (or paste it into <code>data.js</code>) to get added to the directory.</p>
-      <pre id="snippet"></pre>
-      <button type="button" id="copy-snippet" class="text-btn">Copy snippet</button>
+      <h2 id="result-title">Thanks!</h2>
+      <p id="result-message">Your company has been submitted and is now pending review. Once approved, it'll appear in the directory.</p>
     </div>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
   <script src="add-company.js"></script>
 </body>
 </html>
