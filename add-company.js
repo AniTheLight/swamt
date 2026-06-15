@@ -2,8 +2,8 @@ const form = document.getElementById("company-form");
 const linkRows = document.getElementById("link-rows");
 const addLinkBtn = document.getElementById("add-link");
 const resultBox = document.getElementById("result");
-const snippetEl = document.getElementById("snippet");
-const copyBtn = document.getElementById("copy-snippet");
+const resultTitle = document.getElementById("result-title");
+const resultMessage = document.getElementById("result-message");
 
 const MAX_LINKS = 4;
 
@@ -25,8 +25,12 @@ addLinkBtn.addEventListener("click", () => {
   }
 });
 
-form.addEventListener("submit", (e) => {
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
+
+  const submitBtn = form.querySelector(".submit-btn");
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Submitting...";
 
   const companyName = form.companyName.value.trim();
   const founderName = form.founderName.value.trim();
@@ -51,36 +55,27 @@ form.addEventListener("submit", (e) => {
     founder: founderName,
     description: description,
     tags: tags,
-    links: links
+    links: links,
+    status: "pending"
   };
 
-  snippetEl.textContent = formatEntry(entry);
-  resultBox.hidden = false;
-  resultBox.scrollIntoView({ behavior: "smooth", block: "start" });
+  try {
+    const { error } = await supabaseClient.from("companies").insert(entry);
+    if (error) throw error;
+
+    form.hidden = true;
+    resultTitle.textContent = "Thanks!";
+    resultMessage.textContent = "Your company has been submitted and is now pending review. Once approved, it'll appear in the directory.";
+    resultBox.hidden = false;
+    resultBox.scrollIntoView({ behavior: "smooth", block: "start" });
+  } catch (err) {
+    console.error(err);
+    resultTitle.textContent = "Something went wrong";
+    resultMessage.textContent = "We couldn't submit your company right now. Please try again in a moment.";
+    resultBox.hidden = false;
+    resultBox.scrollIntoView({ behavior: "smooth", block: "start" });
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Add to directory";
+  }
 });
-
-copyBtn.addEventListener("click", () => {
-  navigator.clipboard.writeText(snippetEl.textContent).then(() => {
-    copyBtn.textContent = "Copied!";
-    setTimeout(() => (copyBtn.textContent = "Copy snippet"), 1500);
-  });
-});
-
-function formatEntry(entry) {
-  const tagsStr = entry.tags.map(t => `"${t}"`).join(", ");
-  const linksStr = entry.links.length
-    ? entry.links.map(l => `    { label: "${escapeQuotes(l.label)}", url: "${escapeQuotes(l.url)}" }`).join(",\n")
-    : "";
-
-  return `  {
-    name: "${escapeQuotes(entry.name)}",
-    founder: "${escapeQuotes(entry.founder)}",
-    description: "${escapeQuotes(entry.description)}",
-    tags: [${tagsStr}],
-    links: [${entry.links.length ? "\n" + linksStr + "\n  " : ""}]
-  },`;
-}
-
-function escapeQuotes(str) {
-  return str.replace(/"/g, '\\"');
-}
