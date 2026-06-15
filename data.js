@@ -45,4 +45,11 @@ const COMPANIES = [
     tags: ["resale", "returns", "ai"],
     links: []
   }
+  {
+    name: "WaSun",
+    founder: "Samiul Hussain",
+    description: "smart electrochromic glasses with touch tint adjustment",
+    tags: ["fashiontech", "middleeast"],
+    links: [{ label: "website", url: "https://www.wasuneyewear.co.uk" }]
+  }
 ];
